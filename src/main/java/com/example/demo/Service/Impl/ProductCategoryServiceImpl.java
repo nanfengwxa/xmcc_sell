@@ -1,8 +1,9 @@
-package com.example.demo.Service;
+package com.example.demo.Service.Impl;
 
 import com.example.demo.Dto.ProductCategoryDto;
 import com.example.demo.Entity.ProductCategory;
 import com.example.demo.Repository.ProductCategoryRepository;
+import com.example.demo.Service.ProductCategoryService;
 import com.example.demo.commen.ResultResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

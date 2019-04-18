@@ -1,18 +1,26 @@
-package com.example.demo.Service;
+package com.example.demo.Service.Impl;
 
 import com.example.demo.Dto.ProductCategoryDto;
 import com.example.demo.Dto.ProductInfoDto;
 import com.example.demo.Entity.ProductInfo;
 import com.example.demo.Enums.ResultEnums;
 import com.example.demo.Repository.ProductInfoRepository;
+import com.example.demo.Service.ProductCategoryService;
+import com.example.demo.Service.ProductInfoService;
 import com.example.demo.commen.ResultResponse;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
+import org.springframework.util.StringUtils;
+
+
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 @Service
+@Slf4j
 public class ProductInfoServiceImpl implements ProductInfoService {
     @Autowired
     private ProductCategoryService productCategoryService;
@@ -37,5 +45,35 @@ public class ProductInfoServiceImpl implements ProductInfoService {
             return categorydto;
         }).collect(Collectors.toList());
         return ResultResponse.success(finalResultList);
+    }
+
+
+    //查询商品信息,并返回
+    @Override
+    public ResultResponse<ProductInfo> queryById(String productId) {
+    log.info("传入参数-》{}",productId);
+
+        if (StringUtils.isEmpty(productId)){
+            return ResultResponse.fail(ResultEnums.PARAM_ERROR.getMsg());
+        }
+        Optional<ProductInfo> byId = productInfoRepository.findById(productId);
+        ProductInfo productInfo1 = byId.get();
+        log.info("{}",productInfo1.toString());
+        if (!byId.isPresent()){
+            return ResultResponse.fail(ResultEnums.NOT_EXITS.getMsg());
+        }
+        ProductInfo productInfo = byId.get();
+        //判断是否下架
+        if (productInfo.getProductStatus()==ResultEnums.PRODUCT_DOWN.getCode()){
+            return ResultResponse.fail(ResultEnums.PRODUCT_DOWN.getMsg());
+        }
+        log.info("判断后-》{}",productInfo1.toString());
+        return ResultResponse.success(productInfo);
+    }
+
+    //修改商品信息
+    @Override
+    public void updateProduct(ProductInfo productInfo) {
+        productInfoRepository.save(productInfo);
     }
 }
