@@ -17,7 +17,7 @@ public class ResultResponse<T> {
 
     @JsonInclude(JsonInclude.Include.NON_NULL)//返回json时忽略为null的属性
     private T data;
-
+/**/
     //失败了或者成功了 有时候不需要返回 data
     public ResultResponse(int code,String msg){
         this.code = code;
